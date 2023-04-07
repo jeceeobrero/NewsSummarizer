@@ -10,9 +10,9 @@ const App = () => {
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/newsarticle" element={<DetailNewsArticle />} />
-          <Route path="*" component={NotFound} />
+          <Route path="/" element={<Home />}/>
+          <Route path="/newsarticle" element={<DetailNewsArticle />}/>
+          <Route path="*" component={NotFound}/>
         </Routes>
       </div>
     </Router>
