@@ -1,0 +1,139 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.loading__gif{
+  width: 80px;
+}
+
+.news__article:hover{
+  box-shadow: 5px 5px;
+  text-decoration: none !important;
+}
+
+.news {
+  max-width: 100%;
+  padding: 30px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  color: rgb(29, 27, 27);
+}
+
+.news__title {
+  padding-bottom: 10px;
+  border-bottom: 1px solid lightgray;
+}
+
+.head__text {  
+  margin-top: 30px;
+}
+
+.container__news__desc{
+  max-height: 5em;
+  line-height: 20px;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis !important;
+}
+
+.news__desc {
+  padding-top: 10px;
+  line-height: 25px;
+  font-size: 14px;
+  padding-bottom: 10px;
+}
+
+.news__author {
+  margin-right: 10px;
+  color: purple;
+}
+
+.news__published {
+  margin-right: 10px;
+}
+
+.news__source,
+.news__published {
+  display: inline-block;
+  margin-top: 10px;
+  color: rgb(122, 122, 122);
+}
+
+.all__news {
+  display: flex;
+  gap: 2em;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: translateY(50%);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0%);
+  transition: opacity 500ms, transform 500ms;
+}
+
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0%);
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 500ms, transform 500ms;
+}
+
+@media only screen and (max-width: 768px) {
+  /* For mobile phones: */
+  [class*="news"] {
+    max-width: 100% !important;
+  }
+}
+
+@media only screen and (max-width: 1198px) {
+  /* For mobile phones: */
+  [class*="news"] {
+    max-width: 100% !important;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

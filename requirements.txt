@@ -1,0 +1,7 @@
+Django==3.2.12
+psycopg2==2.9.6
+djangorestframework==3.12.4
+beautifulsoup4==4.11.2
+cchardet==2.1.7
+requests==2.27.1
+openai==0.27.3
