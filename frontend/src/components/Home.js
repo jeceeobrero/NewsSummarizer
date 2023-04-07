@@ -25,7 +25,7 @@ const Home = () => {
     setError(null);
     setLoading(true);
     const res = await axios
-      .get("http://127.0.0.1:8000/api/articles/")
+      .get("https://nlpnewsummarizer.azurewebsites.net/api/articles/")
       .then((response) => {
         setNewsArticles(response.data.news_articles);
         setLoading(false);
@@ -38,7 +38,7 @@ const Home = () => {
 
   const updateLatestNewsArticles = async () => {
     setLoading(true);
-    const res = await axios.post("http://127.0.0.1:8000/api/articles/")
+    const res = await axios.post("https://nlpnewsummarizer.azurewebsites.net/api/articles/")
     .then((response) => {
       setLoading(false);
       fetchNewsArticles();
