@@ -64,7 +64,7 @@ class NewsArticleList(APIView):
             return Response("Success")
         except Exception as e:
             return Response("Error: ", e)
-    post.delay(*arg, **kwargs)
+
     def get(self, request):
         eta = datetime.utcnow() + timedelta(hour=1)
         self.post.apply_async(args=[request], eta=eta)
