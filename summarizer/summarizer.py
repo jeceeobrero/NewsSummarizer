@@ -1,12 +1,8 @@
 import openai
-
-def get_api_key():
-    with open('./summarizer/api-key.txt', 'r') as file:
-        key = file.read()
-    return key
+from news import settings
 
 def generate_summary(text):
-    openai.api_key = get_api_key()    
+    openai.api_key = settings.OPENAI_SECRET_KEY
     
     # Generate summary using GPT-3 API using the configurations
     summary = ""

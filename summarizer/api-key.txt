@@ -1,1 +1,1 @@
-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
+OPENAI_SECRET_KEY
