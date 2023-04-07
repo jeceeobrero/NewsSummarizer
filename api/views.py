@@ -10,11 +10,10 @@ from celery import shared_task
 from datetime import datetime, timedelta
 from celery import Celery
 class NewsArticleList(APIView):
-    @shared_task
+    @shared_task()
     @transaction.atomic
     def post(self, request):
         # Get the parsed articles from BBC, The Guardian, Daily Mail
-        bbc_articles = parse_bbc()
         guardina_articles = parse_guardian()
         daily_mail_articles = parse_daily_mail()
         
@@ -66,8 +65,8 @@ class NewsArticleList(APIView):
             return Response("Error: ", e)
 
     def get(self, request):
-        eta = datetime.utcnow() + timedelta(hour=1)
-        self.post.apply_async(args=[request], eta=eta)
+        eta = datetime.utcnow() + timedelta(hours=1)
+        # self.post.apply_async(args=[request], eta=eta)
         # Retrieve all NewsArticle objects from the database
         news_articles = NewsArticle.objects.all().order_by('-published_date')
 
