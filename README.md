@@ -7,7 +7,11 @@ This application parses articles from news sources namely, BBC, Daily Mail, and 
 ```
     pip install - r requirements.txt
 ```
-- Navigate to frontend directory and run npm build.
+- Navigate to frontend directory and install npm.
+```
+    npm install
+```
+- Run npm build.
 ```
     npm run build
 ```
