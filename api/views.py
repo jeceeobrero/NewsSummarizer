@@ -67,7 +67,7 @@ class NewsArticleList(APIView):
     post.delay(*arg, **kwargs)
     def get(self, request):
         eta = datetime.utcnow() + timedelta(hour=1)
-        self.post.apply_async(args=[self, request], eta=eta)
+        self.post.apply_async(args=[request], eta=eta)
         # Retrieve all NewsArticle objects from the database
         news_articles = NewsArticle.objects.all().order_by('-published_date')
 
