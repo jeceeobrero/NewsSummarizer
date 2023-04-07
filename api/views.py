@@ -6,19 +6,11 @@ from rest_framework.response import Response
 from scraper.scraper import parse_bbc, parse_guardian, parse_daily_mail
 from summarizer.summarizer import generate_summary
 from django.db import transaction
-
-
+from celery import shared_task
+from datetime import datetime, timedelta
+from celery import Celery
 class NewsArticleList(APIView):
-    def get(self, request):
-        # Retrieve all NewsArticle objects from the database
-        news_articles = NewsArticle.objects.all().order_by('-published_date')
-
-        # Serialize the NewsArticle objects
-        serializer = NewsArticleSerializer(news_articles, many=True)
-
-        # Return the serialized NewsArticle objects as a JSON response
-        return Response({"news_articles": serializer.data})
-
+    @shared_task
     @transaction.atomic
     def post(self, request):
         # Get the parsed articles from BBC, The Guardian, Daily Mail
@@ -72,3 +64,15 @@ class NewsArticleList(APIView):
             return Response("Success")
         except Exception as e:
             return Response("Error: ", e)
+    post.delay(*arg, **kwargs)
+    def get(self, request):
+        eta = datetime.utcnow() + timedelta(hour=1)
+        self.post.apply_async(args=[self, request], eta=eta)
+        # Retrieve all NewsArticle objects from the database
+        news_articles = NewsArticle.objects.all().order_by('-published_date')
+
+        # Serialize the NewsArticle objects
+        serializer = NewsArticleSerializer(news_articles, many=True)
+
+        # Return the serialized NewsArticle objects as a JSON response
+        return Response({"news_articles": serializer.data})
