@@ -2,6 +2,20 @@
 
 This application parses articles from news sources namely, BBC, Daily Mail, and The Guardian, summarizes these articles, and display their information such as title, author, published date, source, url, and its summary. 
 
+## How to run locally
+- Type the command in command line.
+```
+    pip install - r requirements.txt
+```
+- Navigate to frontend directory and run npm build.
+```
+    npm run build
+```
+- Go back to the base directory where there is manage.py and run this command.
+```
+    python manage.py runserver
+```
+
 ## Frontend API
 This is the frontend for the News Articles app which displays list of articles and its summaries. This uses ReactJS Framework due to its dynamic features and its helpful libraries.
 
@@ -32,7 +46,7 @@ This is the frontend for the News Articles app which displays list of articles a
 # Limitations
 1) It does have error handling from the parsing of news articles and the summarizing of the news articles, to the actual display of the news articles. 
 It displays errors however, it sometimes give vague errors. This will be great addition in the future of the News Summarization App.
-2) It needs optimization as well to maake the app more robust. 
+2) It needs optimization both in frontend and backend (NLP) as well to make the app more robust. 
 
 ## Backend API
 

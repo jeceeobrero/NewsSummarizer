@@ -36,18 +36,6 @@ const Home = () => {
       });
   };
 
-  const updateLatestNewsArticles = async () => {
-    setLoading(true);
-    const res = await axios.post("https://nlpnewsummarizer.azurewebsites.net/api/articles/")
-    .then((response) => {
-      setLoading(false);
-      fetchNewsArticles();
-    })
-    .catch((error) => {
-      console.log(error); 
-    })
-  };
-
   // Get current news articles based on index indexOfFirstNewsArticle and indexOfLastNewsArticle
   const indexOfLastNewsArticle = currentPage * newsArticlesPerPage;
   const indexOfFirstNewsArticle = indexOfLastNewsArticle - newsArticlesPerPage;
@@ -85,7 +73,6 @@ const Home = () => {
           <p>{error}</p>
         ) : (
           <>
-            <button className="btn btn-primary my-2" onClick={updateLatestNewsArticles}>Update Latest Articles</button>
             <CSSTransition key={currentPage} timeout={500} classNames="fade">
               <NewsArticles
                 articles={currentNewsArticles}
