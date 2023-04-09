@@ -5,5 +5,5 @@ import requests
 
 @shared_task
 def parse_summarize_articles(self, request):
-    response = requests.post('http://127.0.0.1:8000/api/articles/')
+    response = requests.post('https://nlpnewsummarizer.azurewebsites.net/api/articles/')
     return "Success"

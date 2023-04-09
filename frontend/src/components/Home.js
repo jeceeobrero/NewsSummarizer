@@ -27,7 +27,7 @@ const Home = () => {
     setError(null);
     setLoading(true);
     const res = await axios
-      .get(`http://127.0.0.1:8000/api/articles/?page=${page}`)
+      .get(`https://nlpnewsummarizer.azurewebsites.net/api/articles/?page=${page}`)
       .then((response) => {
         console.log(response);
         setTotalPages(response.data.total_pages);
