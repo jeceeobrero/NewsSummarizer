@@ -8,4 +8,4 @@ openai==0.27.3
 whitenoise==5.0.1
 numpy==1.22.4
 celery==5.2.6
-newspaper3k=0.2.8
+newspaper3k==0.2.8
