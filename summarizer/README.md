@@ -5,6 +5,9 @@ This summarizer's goal is to display the brief and precise content of the news a
 ## How it Works
 
 1. It defines the API Key for the Open AI.
+```
+openai.api_key = get_api_key()     
+```
 2. Generate summary using GPT-3 API with the desired configurations.
 ```
 # Generate summary using GPT-3 API using the configurations

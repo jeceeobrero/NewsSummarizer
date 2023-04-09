@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import SearchInput from "./SearchInput";
@@ -12,21 +12,25 @@ const Home = () => {
   const [newsArticles, setNewsArticles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [newsArticlesPerPage] = useState(6);
+  const [totalPages, setTotalPages] = useState(1);
   const [searchValue, setSearchValue] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
     // Call the API immediately
-    fetchNewsArticles();
-  }, []);
+    fetchNewsArticles(currentPage);
+  }, [currentPage]);
 
-  const fetchNewsArticles = async () => {
+  // Create a GET call with pagination. This is useful whenever there are too many pages.
+  // Instead of loading it all at once, just call the page needed to render. 
+  const fetchNewsArticles = async (page) => {
     setError(null);
     setLoading(true);
     const res = await axios
-      .get("https://nlpnewsummarizer.azurewebsites.net/api/articles/")
+      .get(`http://127.0.0.1:8000/api/articles/?page=${page}`)
       .then((response) => {
+        console.log(response);
+        setTotalPages(response.data.total_pages);
         setNewsArticles(response.data.news_articles);
         setLoading(false);
       })
@@ -36,31 +40,12 @@ const Home = () => {
       });
   };
 
-  // Get current news articles based on index indexOfFirstNewsArticle and indexOfLastNewsArticle
-  const indexOfLastNewsArticle = currentPage * newsArticlesPerPage;
-  const indexOfFirstNewsArticle = indexOfLastNewsArticle - newsArticlesPerPage;
-
-  // Total News Articles
-  const totalNewsArticles = newsArticles.length;
-
-  //  Store a subset of filteredNewsArticles to display on the current page.
-  const currentNewsArticles = newsArticles.slice(
-    indexOfFirstNewsArticle,
-    indexOfLastNewsArticle
-  );
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const pageNumbers = [];
-
-  for (
-    let i = 1;
-    i <= Math.ceil(totalNewsArticles / newsArticlesPerPage);
-    i++
-  ) {
-    pageNumbers.push(i);
-  }
+  // Change page and use the useCallback hook to memoize the function and avoid unnecessary re-renders.
+  const paginate = useCallback((pageNumber) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
+    }
+  }, [totalPages]);
 
   return (
     <div className="container mt-5">
@@ -73,18 +58,20 @@ const Home = () => {
           <p>{error}</p>
         ) : (
           <>
-            <CSSTransition key={currentPage} timeout={500} classNames="fade">
+            <CSSTransition key={currentPage} timeout={100} classNames="fade">
               <NewsArticles
-                articles={currentNewsArticles}
+                articles={newsArticles}
                 searchVal={searchValue}
                 loading={loading}
               />
             </CSSTransition>
-            <Pagination
-              newsArticlesPerPage={newsArticlesPerPage}
-              totalNewsArticles={newsArticles.length}
-              paginate={paginate}
-            />
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                paginate={paginate}
+              />
+            )}
           </>
         )}
       </TransitionGroup>

@@ -1,35 +1,38 @@
 from django.core.cache import cache
 from .models import NewsArticle
 from .serializers import NewsArticleSerializer
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from scraper.scraper import parse_bbc, parse_guardian, parse_daily_mail
+from rest_framework.pagination import PageNumberPagination
+from django.core.paginator import Paginator
+from scraper.scraper import parse_news_sources
 from summarizer.summarizer import generate_summary
 from django.db import transaction
-from celery import shared_task
 from datetime import datetime, timedelta
-from celery import Celery
+from .tasks import parse_summarize_articles
+class NewsArticlePagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 class NewsArticleList(APIView):
-    @shared_task()
+    pagination_class = NewsArticlePagination
+
     @transaction.atomic
     def post(self, request):
         # Get the parsed articles from BBC, The Guardian, Daily Mail
-        guardina_articles = parse_guardian()
-        daily_mail_articles = parse_daily_mail()
-        
-        news_articles = parse_bbc()
-        news_articles.extend(guardina_articles) if guardina_articles else []
-        news_articles.extend(daily_mail_articles) if daily_mail_articles else []
-        
+        parsed_articles = parse_news_sources()
+        print(parsed_articles)
         try:
-            for article in news_articles:
+            for article in parsed_articles:
                 # Extract all article details
                 title = article.get('Title')
                 author = article.get('Author')
                 published_date = article.get('Published Date')
                 parsed_content = article.get('Content')
                 source = article.get('Source')
-                
+
                 # Check if the news article has already been scraped
                 url = article.get('URL')
                 cache_key = f'news_article_{url}'
@@ -58,20 +61,29 @@ class NewsArticleList(APIView):
 
                         # Cache the news article for future requests
                         cache.set(cache_key, news_article)
-                    
+
             # Return the serialized NewsArticle object as a JSON response
             return Response("Success")
         except Exception as e:
-            return Response("Error: ", e)
+            return Response(e, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def get(self, request):
-        eta = datetime.utcnow() + timedelta(hours=1)
-        # self.post.apply_async(args=[request], eta=eta)
         # Retrieve all NewsArticle objects from the database
         news_articles = NewsArticle.objects.all().order_by('-published_date')
 
+        # Paginate the NewsArticle objects
+        paginator = Paginator(news_articles, 6)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         # Serialize the NewsArticle objects
-        serializer = NewsArticleSerializer(news_articles, many=True)
+        serializer = NewsArticleSerializer(page_obj, many=True)
 
         # Return the serialized NewsArticle objects as a JSON response
-        return Response({"news_articles": serializer.data})
+        return Response({"news_articles": serializer.data, "page_number": page_obj.number, "total_pages": paginator.num_pages}, status=status.HTTP_200_OK)
+    
+
+class NewsArticleTask(APIView):
+    def post(self, request):
+        eta = datetime.now() + timedelta(hours=1)
+        parse_summarize_articles.apply_async(args=[4, 4], eta=eta)

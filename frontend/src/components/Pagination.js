@@ -1,18 +1,14 @@
 import React from 'react';
 
-const Pagination = ({ newsArticlesPerPage, totalNewsArticles, paginate }) => {
-  const pageNumbers = [];
-
-  for (let i = 1; i <= Math.ceil(totalNewsArticles / newsArticlesPerPage); i++) {
-    pageNumbers.push(i);
-  }
+const Pagination = ({ currentPage, totalPages, paginate }) => {
+  const pageNumbers = [...Array(totalPages).keys()].map(i => i + 1);
 
   return (
     <nav>
-      <ul className='pagination my-5 mx-auto float-right'>
+     <ul className='pagination my-5 mx-auto float-right'>
         {pageNumbers.map(number => (
-          <li key={number} className='page-item'>
-            <a onClick={() => paginate(number)} href={"#" + number} className='page-link'>
+          <li key={number} className={`page-item${number === currentPage ? ' active' : ''}`}>
+            <a onClick={() => paginate(number)} href={`#`} className='page-link'>
               {number}
             </a>
           </li>

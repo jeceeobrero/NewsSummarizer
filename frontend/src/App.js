@@ -12,7 +12,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/newsarticle" element={<DetailNewsArticle />}/>
-          <Route path="*" component={NotFound}/>
+          <Route path="*" element={<NotFound />}/> // Add this catch-all route at the bottom to render Not Found page
         </Routes>
       </div>
     </Router>

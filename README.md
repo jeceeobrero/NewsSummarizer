@@ -20,7 +20,7 @@ This application parses articles from news sources namely, BBC, Daily Mail, and 
     python manage.py runserver
 ```
 
-## Frontend API
+## Frontend
 This is the frontend for the News Articles app which displays list of articles and its summaries. This uses ReactJS Framework due to its dynamic features and its helpful libraries.
 
 # Features
@@ -62,9 +62,10 @@ This Backend API displays and parses+summarizes three reputable sources namely, 
 3) Summarizer - summarizes and display the brief and precise content of the news article. It uses GPT-3, an autoregressive language model released in 2020 that uses deep learning to produce human-like text.
 
 # Methods
-1) GET all news articles sorted according to the latest dates.
+1) GET all news articles sorted according to the latest dates. 
+- It can be accessed thru '/api/articles'
 2) POST all parsed and summarized articles. 
 - Since it involves list of articles, it is best to use atomic transaction in saving news articles which is implemented in this app.
 - It also implements caching which will avoid duplication of parsing and summarizing procedures.
 - It logs errors when it encountered one.
-
+- It can be accessed thru '/api/articles'

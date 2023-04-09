@@ -1,30 +1,21 @@
 import React, { useState, useEffect } from "react";
 import NewsArticle from "./NewsArticle";
 
-const NewsArticles = ({ articles, searchVal, loading }) => {
-  const newsArticles = articles ? articles : "";
-  const searchValue = searchVal ? searchVal : ""; 
-
+const NewsArticles = ({ articles = [], searchVal = '', loading = false }) => {
   if (loading) {
     return <h2>Loading...</h2>;
   }
   
   return (
     <div className="all__news">
-      {newsArticles.filter((article)=> {
-        if(searchValue == ""){
-          return article;
-        }
-        else if(article.title.toLowerCase().includes(searchValue.toLowerCase())){
-          return article;
-        }
-        else if(article.source.toLowerCase().includes(searchValue.toLowerCase())){
-          return article;
-        }
-        else if(article.summarized_content.toLowerCase().includes(searchValue.toLowerCase())){
-          return article;
-        }
-      }).map((article, key) => {
+      {articles.filter((article)=> {
+        return (
+            searchVal === "" ||
+            article.title.toLowerCase().includes(searchVal.toLowerCase()) ||
+            article.source.toLowerCase().includes(searchVal.toLowerCase()) ||
+            article.summarized_content.toLowerCase().includes(searchVal.toLowerCase())
+        );
+      }).map((article) => {
         return(
           <NewsArticle newsArticle={article} loading={loading}/>
         );
